@@ -131,7 +131,6 @@ def main():
     daily_average = daily_average * cpu_count
     print("{} workers have reported in, giving a daily average GHz-days of {}."
           .format(cpu_count, format(daily_average, '.4f')))
-    
 
     """
     # Compute days until in Top 500
