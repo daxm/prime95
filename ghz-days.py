@@ -28,7 +28,7 @@ def parse_table(table_id, html_content):
         header = [text(th) for th in table.xpath('//th')]  # 1
         data_set = [[text(td) for td in tr.xpath('td')]
                     for tr in table.xpath('//tr')]  # 2
-        print('{}/{}'.format(len(data_set[1]),len(header)))
+        print('{}/{}'.format(len(data_set[1]), len(header)))
         data_set = [row for row in data_set if len(row) == len(header)]  # 3
 
     return data_set
@@ -63,7 +63,7 @@ def cpus_with_ghzdays(data_set):
     count = 0
     for row in data_set:
         if row[5] == ' T' and row[6] != '0.0':
-            count+=1
+            count += 1
 
     return count
 
@@ -101,7 +101,7 @@ def compute_ghzdays_average(data_set):
     count = 0
     for row in data_set:
         daily_average += (float(row[6]) / float(row[4]))
-        count+=1
+        count += 1
 
     # Average GHz-days per day for all entries.
     daily_average = daily_average / count
@@ -134,8 +134,8 @@ def main():
         cpu_count = cpus_with_ghzdays(results_cpus)
         # Compute daily average GHz-days for CPUs that have reported in.
         daily_average = daily_average * cpu_count
-        print("{} workers have reported in giving a daily average GHz-days of {}.".format(cpu_count,
-                                                                                         format(daily_average, '.4f')))
+        print("{} workers have reported in, giving a daily average GHz-days of {}."
+              .format(cpu_count, format(daily_average, '.4f')))
 
         # Compute days until in Top 500
         get_top_500(session)
