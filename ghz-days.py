@@ -28,8 +28,8 @@ def parse_table(table_id, html_content):
         header = [text(th) for th in table.xpath('//th')]  # 1
         data_set = [[text(td) for td in tr.xpath('td')]
                     for tr in table.xpath('//tr')]  # 2
+        print('{}/{}'.format(len(data_set[1]),len(header)))
         data_set = [row for row in data_set if len(row) == len(header)]  # 3
-        # data_set = pd.DataFrame(data_set, columns=header)  # 4 (I have no need to beautify the data_set at this time.)
 
     return data_set
 
