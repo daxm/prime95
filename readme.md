@@ -9,8 +9,8 @@ file.  Create a userdata.py file and add the following two lines:
 USERNAME = 'your_gimps_username'
 PASSWORD = 'your_gimps_password'
 ```
-OR, you can just add the **USERNAME** and **PASSWORD** variables to the top of your ghz-days.py script and comment out the
-following in ghz-days.py:
+OR, you can just add the **USERNAME** and **PASSWORD** variables to the top of your ghz-days.py script and comment out 
+the following in my_gimps_stats.py:
 ```
 from userdata import *
 ```
