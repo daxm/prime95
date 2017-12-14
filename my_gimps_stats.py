@@ -25,8 +25,7 @@ def parse_table(table_id, html_content):
     # I'm not fully sure what all this next block of code does but it certainly cleans up my data!
     # https://stackoverflow.com/questions/28305578/python-get-html-table-data-by-xpath
     for table in tree.xpath('//table[@id="{}"]'.format(table_id)):
-        print('//table[@id="{}"]'.format(table_id))
-        header = [text(th) for th in table.xpath('//th')]  # 1
+        # header = [text(th) for th in table.xpath('//th')]  # 1
         data_set = [[text(td) for td in tr.xpath('td')]
                     for tr in table.xpath('//tr')]  # 2
         """Some of my "data_set" HTML tables are formatted in a way that gets messed up by # 3 so I'm
@@ -115,12 +114,13 @@ def main():
     # Now grab table(s) that we need out of the HTML files grabbed.
     results_table = parse_table(table_id='report1', html_content=results_html)
     results_table = [row for row in results_table if row != []]
-    account_365_table = parse_table(table_id='report1', html_content=account_html)
-    #account_365_table = [row for row in account_365_table if len(row) == 5]
-    print(account_365_table)
-    account_overall_table = parse_table(table_id='report2', html_content=account_html)
     cpus_table = parse_table(table_id='report1', html_content=cpus_html)
     cpus_table = [row for row in cpus_table if row != []]
+
+    account_365_table = parse_table(table_id='report1', html_content=account_html)
+    account_365_table = [row for row in account_365_table if len(row) == 5]
+    print(account_365_table)
+    account_overall_table = parse_table(table_id='report2', html_content=account_html)
     top_500_table = parse_table(table_id='report1', html_content=top_500_html)
 
     # Compute your daily average GHz-days per day.  On average this is how many GHz-days you should receive daily.
