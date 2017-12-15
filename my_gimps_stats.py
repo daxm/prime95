@@ -185,10 +185,12 @@ def main():
     days2go = (next_rank_ghzdays - my_score) / daily_average
     print('At this rate you should surpass the next Top 500 '
           'rank, {}, in {} days.'.format(next_rank, format(days2go, '.1f')))
-    print("""###########################
+    print("""
+###########################
 NOTE:  Remember that they are increasing their "Total GHz Days" too.
 The expected intersect date will probably be further out than this predicted date.
-###########################""")
+###########################
+""")
 
 
 if __name__ == '__main__':
