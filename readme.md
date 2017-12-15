@@ -3,15 +3,20 @@
 The goal of this project is to allow user's of the Great Internet Mersenne Prime Search (GIMPS) to gather statistics of
 their efforts on this project.
 
+To install the necessary packages issue the following command:
+```bazaar
+pip3 install -r requirements.txt
+```
+
 NOTE:  I purposely didn't add the userdata.py file as that is where your username and password should be stored in that
 file.  Create a userdata.py file and add the following two lines:
-```
+```bazaar
 USERNAME = 'your_gimps_username'
 PASSWORD = 'your_gimps_password'
 ```
 OR, you can just add the **USERNAME** and **PASSWORD** variables to the top of your ghz-days.py script and comment out 
 the following in my_gimps_stats.py:
-```
+```bazaar
 from userdata import *
 ```
 
