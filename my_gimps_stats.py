@@ -106,6 +106,7 @@ def get_500_level_stats(html_content, rank):
 
 
 def get_account_stats(table_id, html_content):
+    """This gleans the your rank values (for the last 365 days and overall) as well as your total earned ghz-days."""
     soup = BeautifulSoup(html_content, 'lxml')
     tabler = soup.find(id='{}'.format(table_id))
     this_is_the_one = False
