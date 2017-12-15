@@ -186,10 +186,10 @@ def main():
     print('At this rate you should surpass the next Top 500 '
           'rank, {}, in {} days.'.format(next_rank, format(days2go, '.1f')))
     print("""
-###########################
+#################################################################################
 NOTE:  Remember that they are increasing their "Total GHz Days" too.
 The expected intersect date will probably be further out than this predicted date.
-###########################
+#################################################################################
 """)
 
 
