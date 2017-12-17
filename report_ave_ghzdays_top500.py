@@ -71,6 +71,7 @@ def main():
 
     # Collect the Top 500 table for comparison parsing vs. my stats.
     today_data = get_top500_data(html_content=top_500_html)
+    date_today = datetime.date.today()
 
     conn = sqlite3.connect('top_500.db')
     cursor = conn.cursor()
@@ -78,8 +79,15 @@ def main():
     for row in today_data:
         rank = row[1]
         ghzdays = row[3]
-        cursor.execute("SELECT date_caputered, rank, ghzdays from top500 WHERE rank = {}".format(rank))
-        print()
+        cursor.execute("SELECT * from top500 WHERE rank = '{}'".format(rank))
+        for historical_row in cursor:
+            date_delta = 1  # FIXME.  Need to compute days between today and what is in top_500.db.
+            if date_delta > 0:
+                ghzdays_delta = float(ghzdays) - float(historical_row[3])
+                ghzdays_ave = ghzdays_delta / date_delta
+                print('For rank {} the average ghzdays is {}.'.format(rank, ghzdays_ave))
+            else:
+                print('There is no new date data for rank {} thus no comparison can be made.'.format(rank))
 
     conn.commit()
     conn.close()
