@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 """Query www.mersenne.org for stats on your GIMPS account."""
 
-# from userdata import *
 import requests
 from lxml import html
 from bs4 import BeautifulSoup
@@ -46,7 +45,7 @@ def get_top500_data(html_content):
         for gchild in child.children:  # This is the <tr> level.
             try:
                 counter = 0
-                for ggchild in gchild.children:
+                for ggchild in gchild.children:  # This is the <td> level.
                     if counter == 0:
                         rank = ggchild.text
                     elif counter == 1:
@@ -74,12 +73,15 @@ def main():
                                         url='{}/report_top_500/'.format(main_url),
                                         )
 
+    # Collect the Top 500 table for comparison parsing vs. my stats.
+    today_data = get_top500_data(html_content=top_500_html)
+
     conn = sqlite3.connect('top_500.db')
     cursor = conn.cursor()
 
-    # Collect the Top 500 table for comparison parsing vs. my stats.
-    today_data = get_top500_data(html_content=top_500_html)
-    cursor.executemany('INSERT INTO top500 VALUES(?, ?, ?, ?)', today_data)
+    for row in today_data:
+        print(row)
+    # cursor.executemany('INSERT INTO top500 VALUES(?, ?, ?, ?)', today_data)
 
     conn.commit()
     conn.close()
