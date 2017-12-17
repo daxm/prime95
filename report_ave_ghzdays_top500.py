@@ -64,10 +64,6 @@ def get_top500_data(html_content):
 
 def main():
     with requests.Session() as session:
-        # Log in
-        # login_data = {'user_login': USERNAME, 'user_password': PASSWORD}
-        # session.post('{}/'.format(main_url), data=login_data, )
-
         # Grab the HTML for the pages we are going to parse.
         top_500_html = get_html_content(session=session,
                                         url='{}/report_top_500/'.format(main_url),
@@ -80,8 +76,10 @@ def main():
     cursor = conn.cursor()
 
     for row in today_data:
-        print(row)
-    # cursor.executemany('INSERT INTO top500 VALUES(?, ?, ?, ?)', today_data)
+        rank = row[1]
+        ghzdays = row[3]
+        cursor.execute("SELECT date_caputered, rank, ghzdays from top500 WHERE rank = {}".format(rank))
+        print()
 
     conn.commit()
     conn.close()
