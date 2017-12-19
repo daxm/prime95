@@ -81,11 +81,13 @@ def main():
         ghzdays = row[3]
         cursor.execute("SELECT * from top500 WHERE rank = '{}'".format(rank))
         for historical_row in cursor:
-            date_delta = 1  # FIXME.  Need to compute days between today and what is in top_500.db.
+            then_year, then_month, then_day = historical_row[0].split('-')
+            date_then = datetime.date(int(then_year), int(then_month), int(then_day))
+            date_delta = (date_today - date_then).days
             if date_delta > 0:
                 ghzdays_delta = float(ghzdays) - float(historical_row[3])
                 ghzdays_ave = ghzdays_delta / date_delta
-                print('For rank {} the average ghzdays is {}.'.format(rank, ghzdays_ave))
+                print('For rank {} the average ghzdays is {}.'.format(rank, format(ghzdays_ave, '.4f')))
             else:
                 print('There is no new date data for rank {} thus no comparison can be made.'.format(rank))
 
