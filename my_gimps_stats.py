@@ -60,22 +60,19 @@ def compute_ghzdays_average(data_set):
     return daily_average
 
 
-def get_html_content(session, url, **kwargs):
-    if 'data' in kwargs:
-        data = kwargs['data']
-    else:
-        data = ''
-    if 'params' in kwargs:
-        params = kwargs['params']
-    else:
-        params = ''
-
+def get_html_content(session, url, data='', params='',):
+    """
+    :param session: required, the requests session.
+    :param url: required, the URL being queried.
+    :param data: optional, based on FORM style POST/PUT actions.
+    :param params: optional, based on variables passed as a part of the URL path (e.g. ?var1=1&var2=2)
+    :return: response.content
+    """
     html_response = session.get(url=url, params=params, data=data)
     if html_response.status_code == 200:
         return html_response.content
     else:
         print('Error with HTML GET of {}.  Status code {}.'.format(url, html_response.status_code))
-        return False
 
 
 def get_500_level_stats(html_content, rank):
@@ -93,12 +90,10 @@ def get_500_level_stats(html_content, rank):
                         continue
                     this_is_the_one = True
                 if this_is_the_one:
-                    counter = 0
-                    for ggchild in gchild.children:
-                        if counter == 2 and this_is_the_one:
+                    for i, ggchild in enumerate(gchild.children):
+                        if i == 2 and this_is_the_one:
                             this_is_the_one = False
                             ghzdays = ggchild.text
-                        counter += 1
                     break
             except AttributeError:  # For some reason there is a extra BeautifulSoup
                 pass
@@ -122,15 +117,13 @@ def get_account_stats(table_id, html_content):
                     continue
                 this_is_the_one = True
             if this_is_the_one:
-                counter = 0
-                for ggchild in gchild.children:
-                    if counter == 1:
+                for i, ggchild in enumerate(gchild.children):
+                    if i == 1:
                         my_rank = ggchild.text
-                    if counter == 2:
+                    elif i == 2:
                         my_overall = ggchild.text
-                    if counter == 3:
+                    elif i == 3:
                         my_ghzdays = ggchild.text
-                    counter += 1
     return my_rank, my_overall, my_ghzdays
 
 
@@ -141,20 +134,24 @@ def main():
         session.post('{}/'.format(main_url), data=login_data, )
 
         # Grab the HTML for the pages we are going to parse.
-        results_html = get_html_content(session=session,
-                                        url='{}/results'.format(main_url),
-                                        params='limit={}'.format(results_limit),
-                                        )
-        cpus_html = get_html_content(session=session,
-                                     url='{}/cpus/'.format(main_url),
-                                     )
-        account_html = get_html_content(session=session,
-                                        url='{}/account/'.format(main_url),
-                                        params='details=1',
-                                        )
-        top_500_html = get_html_content(session=session,
-                                        url='{}/report_top_500/'.format(main_url),
-                                        )
+        results_html = get_html_content(
+            session=session,
+            url='{}/results'.format(main_url),
+            params='limit={}'.format(results_limit),
+        )
+        cpus_html = get_html_content(
+            session=session,
+            url='{}/cpus/'.format(main_url),
+        )
+        account_html = get_html_content(
+            session=session,
+            url='{}/account/'.format(main_url),
+            params='details=1',
+        )
+        top_500_html = get_html_content(
+            session=session,
+            url='{}/report_top_500/'.format(main_url),
+        )
 
     # Now grab table(s) that we need out of the HTML files grabbed.
     results_table = parse_table(table_id='report1', html_content=results_html)
