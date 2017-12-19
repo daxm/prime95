@@ -173,11 +173,11 @@ def main():
     my_rank_365, my_overall_365, my_ghzdays_365 = get_account_stats('report1', account_html)
     print('Your last 365 day Rank: {} out of {} active reports.'.format(my_rank_365, my_overall_365))
     my_rank_lifetime, my_overall_lifetime, my_ghzdays_lifetime = get_account_stats('report2', account_html)
-    print('Your Overall Rank: {} out of {} reported, ever.'.format(my_rank_lifetime, my_overall_lifetime))
+    print('Your Overall Lifetime Rank: {} out of {} reported.'.format(my_rank_lifetime, my_overall_lifetime))
 
     # Collect the Top 500 table for comparison parsing vs. my stats.
-    my_score = float(my_ghzdays_lifetime.replace(',', ''))
-    my_rank = int(float(my_overall_lifetime.replace(',', '')))
+    my_score = float(my_ghzdays_365.replace(',', ''))
+    my_rank = int(float(my_overall_365.replace(',', '')))
     if my_rank > 500:
         next_rank = '500'
     else:
