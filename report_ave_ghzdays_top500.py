@@ -6,26 +6,11 @@ from lxml import html
 from bs4 import BeautifulSoup
 import sqlite3
 import datetime
+from utilities import url_utilities
 
 # ### Possible changeable data ### #
 main_url = 'https://www.mersenne.org'
 # ### #
-
-
-def get_html_content(session, url, data='', params=''):
-    """
-    :param session: required, the requests session.
-    :param url: required, the URL being queried.
-    :param data: optional, based on FORM style POST/PUT actions.
-    :param params: optional, based on variables passed as a part of the URL path (e.g. ?var1=1&var2=2)
-    :return: response.content
-    """
-
-    html_response = session.get(url=url, params=params, data=data)
-    if html_response.status_code == 200:
-        return html_response.content
-    else:
-        print('Error with HTML GET of {}.  Status code {}.'.format(url, html_response.status_code))
 
 
 def get_top500_data(html_content):
@@ -61,7 +46,7 @@ def get_top500_data(html_content):
 def main():
     with requests.Session() as session:
         # Grab the HTML for the pages we are going to parse.
-        top_500_html = get_html_content(
+        top_500_html = url_utilities.get_html_content(
             session=session,
             url='{}/report_top_500/'.format(main_url),
         )
