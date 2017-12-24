@@ -2,7 +2,6 @@
 """Query www.mersenne.org for stats on your GIMPS account."""
 
 import requests
-from lxml import html
 from bs4 import BeautifulSoup
 import sqlite3
 import datetime
