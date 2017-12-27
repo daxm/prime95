@@ -2,14 +2,8 @@
 """Query www.mersenne.org for stats on your GIMPS account."""
 
 from userdata import *
-from utilities import url_utilities
+from utilities import url_utilities, global_variiables
 import requests
-
-# ### Possible changeable data ### #
-main_url = 'https://www.mersenne.org'
-# results_limit can be anything from '1' to '9999'.
-results_limit = '9999'
-# ### #
 
 
 def cpus_with_ghzdays(data_set):
@@ -42,26 +36,26 @@ def main():
     with requests.Session() as session:
         # Log in
         login_data = {'user_login': USERNAME, 'user_password': PASSWORD}
-        session.post('{}/'.format(main_url), data=login_data, )
+        session.post('{}/'.format(global_variiables.main_url), data=login_data, )
 
         # Grab the HTML for the pages we are going to parse.
         results_html = url_utilities.get_html_content(
             session=session,
-            url='{}/results'.format(main_url),
-            params='limit={}'.format(results_limit),
+            url='{}/results'.format(global_variiables.main_url),
+            params='limit={}'.format(global_variiables.results_limit),
         )
         cpus_html = url_utilities.get_html_content(
             session=session,
-            url='{}/cpus/'.format(main_url),
+            url='{}/cpus/'.format(global_variiables.main_url),
         )
         account_html = url_utilities.get_html_content(
             session=session,
-            url='{}/account/'.format(main_url),
+            url='{}/account/'.format(global_variiables.main_url),
             params='details=1',
         )
         top_500_html = url_utilities.get_html_content(
             session=session,
-            url='{}/report_top_500/'.format(main_url),
+            url='{}/report_top_500/'.format(global_variiables.main_url),
         )
 
     # Now grab table(s) that we need out of the HTML files grabbed.
@@ -74,15 +68,11 @@ def main():
     cpu_count = cpus_with_ghzdays(cpus_table)
     # Compute daily average GHz-days for CPUs that have reported in.
     daily_average = daily_average * cpu_count
-    print("{} workers have reported in, giving a daily average GHz-days of {}."
-          .format(cpu_count, format(daily_average, '.4f')))
 
     # The def parse_table() doesn't handle the Account nor Top 500 web pages well.
     my_rank_365, my_overall_365, my_ghzdays_365 = url_utilities.get_account_stats('report1', account_html)
-    print('Your last 365 day Rank: {} out of {} active reports.'.format(my_rank_365, my_overall_365))
     my_rank_lifetime, my_overall_lifetime, my_ghzdays_lifetime = url_utilities.get_account_stats(
         'report2', account_html)
-    print('Your Overall Lifetime Rank: {} out of {} reported.'.format(my_rank_lifetime, my_overall_lifetime))
 
     # Collect the Top 500 table for comparison parsing vs. my stats.
     my_score = float(my_ghzdays_365.replace(',', ''))
@@ -93,14 +83,12 @@ def main():
         next_rank = str(my_rank - 1)
     next_rank_ghzdays = float(url_utilities.get_500_level_stats(html_content=top_500_html, rank=next_rank))
     days2go = (next_rank_ghzdays - my_score) / daily_average
-    print('At this rate you should surpass the next Top 500 '
-          'rank, {}, in {} days.'.format(next_rank, format(days2go, '.1f')))
-    print("""
-#################################################################################
-NOTE:  Remember that they are increasing their "Total GHz Days" too.
-The expected intersect date will probably be further out than this predicted date.
-#################################################################################
-""")
+
+    print("Ave GHz-Days: {}".format(format(daily_average, '.4f')))
+    print("Workers: {}".format(cpu_count))
+    print("365 Rank: {}/{}".format(my_rank_365, my_overall_365))
+    print("Lifetime Rank: {}/{}".format(my_rank_lifetime, my_overall_lifetime))
+    print("Estimate reaching rank {} in {} days.".format(next_rank, format(days2go, '.1f')))
 
 
 if __name__ == '__main__':

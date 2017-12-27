@@ -33,6 +33,36 @@ def get_top500_data(html_content):
             continue
         for gchild in child.children:  # This is the <tr> level.
             try:
+                for i, ggchild in enumerate(gchild.children):  # This is the <td> level.
+                    if i == 0:
+                        rank = ggchild.text
+                    elif i == 1:
+                        member_name = ggchild.text
+                    elif i == 2:
+                        ghzdays = ggchild.text
+                    else:
+                        break
+                line_entry = (str(gather_date), rank, member_name, ghzdays)
+                rank_data.append(line_entry)
+            except AttributeError:
+                pass
+    return rank_data
+
+
+def get_top500_data_old(html_content):
+    soup = BeautifulSoup(html_content, 'lxml')
+    tabler = soup.find(id='report1')
+    rank_data = []
+    rank = ''
+    member_name = ''
+    ghzdays = ''
+    gather_date = datetime.date.today()
+
+    for child in tabler.children:  # This is the <thead> and <tbody> level.
+        if child.name != 'tbody':
+            continue
+        for gchild in child.children:  # This is the <tr> level.
+            try:
                 counter = 0
                 for ggchild in gchild.children:
                     if counter == 0:

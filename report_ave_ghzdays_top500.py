@@ -2,44 +2,9 @@
 """Query www.mersenne.org for stats on your GIMPS account."""
 
 import requests
-from bs4 import BeautifulSoup
 import sqlite3
 import datetime
-from utilities import url_utilities
-
-# ### Possible changeable data ### #
-main_url = 'https://www.mersenne.org'
-# ### #
-
-
-def get_top500_data(html_content):
-    soup = BeautifulSoup(html_content, 'lxml')
-    tabler = soup.find(id='report1')
-    rank_data = []
-    rank = ''
-    member_name = ''
-    ghzdays = ''
-    gather_date = datetime.date.today()
-
-    for child in tabler.children:  # This is the <thead> and <tbody> level.
-        if child.name != 'tbody':
-            continue
-        for gchild in child.children:  # This is the <tr> level.
-            try:
-                for i, ggchild in enumerate(gchild.children):  # This is the <td> level.
-                    if i == 0:
-                        rank = ggchild.text
-                    elif i == 1:
-                        member_name = ggchild.text
-                    elif i == 2:
-                        ghzdays = ggchild.text
-                    else:
-                        break
-                line_entry = (str(gather_date), rank, member_name, ghzdays)
-                rank_data.append(line_entry)
-            except AttributeError:
-                pass
-    return rank_data
+from utilities import url_utilities, global_variiables
 
 
 def main():
@@ -47,11 +12,11 @@ def main():
         # Grab the HTML for the pages we are going to parse.
         top_500_html = url_utilities.get_html_content(
             session=session,
-            url='{}/report_top_500/'.format(main_url),
+            url='{}/report_top_500/'.format(global_variiables.main_url),
         )
 
     # Collect the Top 500 table for comparison parsing vs. my stats.
-    today_data = get_top500_data(html_content=top_500_html)
+    today_data = url_utilities.get_top500_data(html_content=top_500_html)
     date_today = datetime.date.today()
 
     conn = sqlite3.connect('top_500.db')
