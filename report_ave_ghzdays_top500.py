@@ -18,6 +18,7 @@ def main():
     # Collect the Top 500 table for comparison parsing vs. my stats.
     today_data = url_utilities.get_top500_data(html_content=top_500_html)
     date_today = datetime.date.today()
+    date_year_ago = date_today - datetime.timedelta(days=365)
 
     conn = sqlite3.connect('top_500.db')
     cursor = conn.cursor()
@@ -25,7 +26,10 @@ def main():
     for row in today_data:
         rank = row[1]
         ghzdays = row[3]
-        cursor.execute("SELECT * from top500 WHERE rank = '{}'".format(rank))
+        sql = "select * from top500 where (date_captured >= '{}' and date_captured <= '{}')" \
+              "and rank = '{}' order by date_captured limit 1".format(date_year_ago, date_today, rank)
+        cursor.execute(sql)
+
         for historical_row in cursor:
             then_year, then_month, then_day = historical_row[0].split('-')
             date_then = datetime.date(int(then_year), int(then_month), int(then_day))

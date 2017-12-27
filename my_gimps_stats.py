@@ -84,7 +84,7 @@ def main():
     next_rank_ghzdays = float(url_utilities.get_500_level_stats(html_content=top_500_html, rank=next_rank))
     days2go = (next_rank_ghzdays - my_score) / daily_average
 
-    print("Ave GHz-Days: {}".format(format(daily_average, '.4f')))
+    print("Ave GHz-Days per day: {}".format(format(daily_average, '.4f')))
     print("Workers: {}".format(cpu_count))
     print("365 Rank: {}/{}".format(my_rank_365, my_overall_365))
     print("Lifetime Rank: {}/{}".format(my_rank_lifetime, my_overall_lifetime))
