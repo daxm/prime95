@@ -23,6 +23,13 @@ def main():
     conn = sqlite3.connect('top_500.db')
     cursor = conn.cursor()
 
+    # Trying out plotting data on a graph.
+    # Uncomment these lines to get a graphical plot of normalized data.
+    # import plotly
+    # from plotly.graph_objs import Scatter, Layout
+    # plotx = []
+    # ploty = []
+
     for row in today_data:
         rank = row[1]
         ghzdays = row[3]
@@ -38,8 +45,14 @@ def main():
                 ghzdays_delta = float(ghzdays) - float(historical_row[3])
                 ghzdays_ave = ghzdays_delta / date_delta
                 print('For rank {} the average ghzdays is {}.'.format(rank, format(ghzdays_ave, '.4f')))
+                # Uncomment these lines to get a graphical plot of normalized data.
+                # plotx.append(rank)
+                # ploty.append(ghzdays_ave / float(ghzdays))
             else:
                 print('There is no new date data for rank {} thus no comparison can be made.'.format(rank))
+
+    # Uncomment these lines to get a graphical plot of normalized data.
+    # plotly.offline.plot({"data": [Scatter(x=plotx, y=ploty)], "layout": Layout(title="hello world.")})
 
     conn.commit()
     conn.close()
