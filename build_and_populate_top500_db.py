@@ -4,6 +4,7 @@
 import requests
 import os
 from utilities import url_utilities, db_utilities
+from userdata import *
 
 # ### Possible changeable data ### #
 main_url = 'https://www.mersenne.org'
@@ -11,9 +12,12 @@ db_name = 'top_500.db'
 # ### #
 
 
+
 def main():
-    if not os.path.isfile(db_name):
-        db_utilities.create_db(db_name)
+    # db_directory is a OS path variable stored in userdata.py
+    db = os.path.join(db_directory, db_name)
+    if not os.path.isfile(db):
+        db_utilities.create_db(db)
 
     # Populate the database with today's Top 500 data.
     with requests.Session() as session:
@@ -21,7 +25,7 @@ def main():
         top_500_html = url_utilities.get_html_content(session=session, url='{}/report_top_500/'.format(main_url))
 
     today_data = url_utilities.get_top500_data(html_content=top_500_html)
-    db_utilities.add_today_ranks(data=today_data, db_name=db_name)
+    db_utilities.add_today_ranks(data=today_data, db_name=db)
 
 
 if __name__ == '__main__':

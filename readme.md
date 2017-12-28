@@ -20,5 +20,18 @@ the following in my_gimps_stats.py:
 from userdata import *
 ```
 
-My first goal is to compute the average GHz-days on a daily basis.  (I know, it is weird to think of GHz-days/day but
-that is the units being measured here.)
+
+##Runable files:
+
+**my_gimps_stats.py**
+* Reports your average Ghz-days/day, your 365 and Overall rankings, as well as your estimated date of surpassing the
+ next "Top 500" rank above you.
+
+**build_and_populate_top500_db.py**
+* If the file doesn't exist it will build a sqlite3 db file.  It will also add today's Top500 stats into said db.
+This file should be run **daily** to give you accurate reporting on the "last 365" deltas.
+
+**report_ave_ghzdays_top500.py**
+* This file will pull the current moment rankings and their current Ghz Days values.  It will then compare those
+rank/value pairs against the daily record (in the Top500.db file created by the build_and_populate_top500_db.py program)
+that is nearest to 365 days ago.
