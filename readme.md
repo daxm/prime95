@@ -20,7 +20,6 @@ the following in my_gimps_stats.py:
 from userdata import *
 ```
 
-
 ##Runable files:
 
 **my_gimps_stats.py**
