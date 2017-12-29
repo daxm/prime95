@@ -76,7 +76,7 @@ def main():
 
     # Collect the Top 500 table for comparison parsing vs. my stats.
     my_score = float(my_ghzdays_365.replace(',', ''))
-    my_rank = int(float(my_overall_365.replace(',', '')))
+    my_rank = int(float(my_rank_365.replace(',', '')))
     if my_rank > 500:
         next_rank = '500'
     else:
