@@ -9,7 +9,7 @@ from userdata import *
 # ### Possible changeable data ### #
 main_url = 'https://www.mersenne.org'
 db_name = 'top_500.db'
-# ### # 
+# ### #
 
 
 
