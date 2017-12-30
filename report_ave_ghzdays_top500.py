@@ -30,6 +30,8 @@ def main():
     # plotx = []
     # ploty = []
 
+    progressing_forward = 0
+    progressing_backward = 0
     for row in today_data:
         rank = row[1]
         ghzdays = row[3]
@@ -45,11 +47,27 @@ def main():
                 ghzdays_delta = float(ghzdays) - float(historical_row[3])
                 ghzdays_ave = ghzdays_delta / date_delta
                 print('For rank {} the average ghzdays is {}.'.format(rank, format(ghzdays_ave, '.4f')))
+                if ghzdays_ave > 0:
+                    progressing_forward += 1
+                elif ghzdays_ave < 0:
+                    progressing_backward += 1
                 # Uncomment these lines to get a graphical plot of normalized data.
                 # plotx.append(rank)
                 # ploty.append(ghzdays_ave / float(ghzdays))
             else:
                 print('There is no new date data for rank {} thus no comparison can be made.'.format(rank))
+
+    # Is GIMPS rankings easier or harder to obtain compared to the historical record.
+    print("{} ranks advanced vs. {} ranks regressed.".format(progressing_forward, progressing_backward))
+    progress_count = progressing_forward - progressing_backward
+    if progress_count > 0:
+        progress_comparison = "more than"
+    elif progress_count < 0:
+        progress_comparison = "less than."
+    else:
+        progress_comparison = "the same as"
+    msg = "GIMPS rankings are computing {} before.".format(progress_comparison)
+    print(msg)
 
     # Uncomment these lines to get a graphical plot of normalized data.
     # plotly.offline.plot({"data": [Scatter(x=plotx, y=ploty)], "layout": Layout(title="hello world.")})
