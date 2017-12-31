@@ -11,7 +11,7 @@ def cpus_with_ghzdays(data_set):
 
     count = 0
     for row in data_set:
-        if row[5] == ' T' and row[6] != '0.0':
+        if row[9] != '' and row[6] != '0.0':
             count += 1
 
     return count
