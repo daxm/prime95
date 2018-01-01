@@ -49,38 +49,6 @@ def get_top500_data(html_content):
     return rank_data
 
 
-def get_top500_data_old(html_content):
-    soup = BeautifulSoup(html_content, 'lxml')
-    tabler = soup.find(id='report1')
-    rank_data = []
-    rank = ''
-    member_name = ''
-    ghzdays = ''
-    gather_date = datetime.date.today()
-
-    for child in tabler.children:  # This is the <thead> and <tbody> level.
-        if child.name != 'tbody':
-            continue
-        for gchild in child.children:  # This is the <tr> level.
-            try:
-                counter = 0
-                for ggchild in gchild.children:
-                    if counter == 0:
-                        rank = ggchild.text
-                    elif counter == 1:
-                        member_name = ggchild.text
-                    elif counter == 2:
-                        ghzdays = ggchild.text
-                    else:
-                        break
-                    counter += 1
-                line_entry = (str(gather_date), rank, member_name, ghzdays)
-                rank_data.append(line_entry)
-            except AttributeError:
-                pass
-    return rank_data
-
-
 def parse_table(table_id, html_content):
     """Using table_id parse the HTML content to get to table data."""
 
@@ -98,7 +66,7 @@ def parse_table(table_id, html_content):
     return data_set
 
 
-def get_500_level_stats(html_content, rank):
+def get_top_500_ghzdays_by_rank(html_content, rank):
     soup = BeautifulSoup(html_content, 'lxml')
     tabler = soup.find(id='report1')
     this_is_the_one = False
@@ -121,6 +89,27 @@ def get_500_level_stats(html_content, rank):
             except AttributeError:  # For some reason there is a extra BeautifulSoup
                 pass
     return ghzdays
+
+
+def get_top_500_rank_by_ghzdays(html_content, ghzdays):
+    soup = BeautifulSoup(html_content, 'lxml')
+    tabler = soup.find(id='report1')
+    this_rank = 0
+    this_ghzdays = 0
+    for child in tabler.children:  # This is the <thead> and <tbody> level.
+        if child.name != 'tbody':
+            continue
+        for gchild in child.children:  # This is the <tr> level.
+            try:
+                for i, ggchild in enumerate(gchild.children):  # this is the <td> level.
+                    if i == 0:
+                        this_rank = ggchild.text
+                    elif i == 2:
+                        this_ghzdays = ggchild.text
+                    if float(this_ghzdays) < ghzdays and this_ghzdays is not 0:
+                        return this_rank
+            except AttributeError:
+                pass
 
 
 def get_account_stats(table_id, html_content):

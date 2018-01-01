@@ -81,14 +81,19 @@ def main():
         next_rank = '500'
     else:
         next_rank = str(my_rank - 1)
-    next_rank_ghzdays = float(url_utilities.get_500_level_stats(html_content=top_500_html, rank=next_rank))
+    next_rank_ghzdays = float(url_utilities.get_top_500_ghzdays_by_rank(html_content=top_500_html, rank=next_rank))
     days2go = (next_rank_ghzdays - my_score) / daily_average
+
+    # Using daily_average, compute expected top ranking in Top 500 over the next 365 days.
+    expected_top500_rank_in_365 = url_utilities.get_top_500_rank_by_ghzdays(html_content=top_500_html,
+                                                                            ghzdays=daily_average*365)
 
     print("Ave GHz-Days per day: {}".format(format(daily_average, '.4f')))
     print("Workers: {}".format(cpu_count))
     print("365 Rank: {}/{}".format(my_rank_365, my_overall_365))
     print("Lifetime Rank: {}/{}".format(my_rank_lifetime, my_overall_lifetime))
     print("Estimate reaching rank {} in {} days.".format(next_rank, format(days2go, '.1f')))
+    print('Expected max Top 500 yearly ranking: {}'.format(expected_top500_rank_in_365))
 
 
 if __name__ == '__main__':
