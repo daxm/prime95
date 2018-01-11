@@ -23,8 +23,10 @@ def compute_ghzdays_average(data_set):
     daily_average = 0
     count = 0
     for row in data_set:
-        daily_average += (float(row[6]) / float(row[4]))
-        count += 1
+        # Manual submissions show up with 0 days compute.  Can't divide by zero!
+        if float(row[4]) > 0:
+            daily_average += (float(row[6]) / float(row[4]))
+            count += 1
 
     # Average GHz-days per day for all entries.
     daily_average = daily_average / count
